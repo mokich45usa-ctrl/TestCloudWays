@@ -1,0 +1,43 @@
+name: Deploy to Cloudways via SFTP
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy build to Cloudways via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          server: ${{ secrets.CLOUDWAYS_HOST }}
+          port: ${{ secrets.CLOUDWAYS_PORT }}
+          username: ${{ secrets.CLOUDWAYS_USERNAME }}
+          password: ${{ secrets.CLOUDWAYS_PASSWORD }}
+          local_path: build/*
+          remote_path: ${{ secrets.CLOUDWAYS_REMOTE_PATH }}
+          sftp_only: true
+
+
