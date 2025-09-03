@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.CLOUDWAYS_USERNAME }}
           password: ${{ secrets.CLOUDWAYS_PASSWORD }}
           local_path: build/*
-          remote_path: ${{ secrets.CLOUDWAYS_REMOTE_PATH }}
+          remote_path: ${{ secrets.CLOUDWAYS_REMOTE_PATH || 'public_html/site' }}
           sftp_only: true
 
 
