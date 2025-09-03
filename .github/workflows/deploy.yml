@@ -32,12 +32,12 @@ jobs:
       - name: Deploy build to Cloudways via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          server: ${{ secrets.CLOUDWAYS_HOST }}
-          port: ${{ secrets.CLOUDWAYS_PORT }}
-          username: ${{ secrets.CLOUDWAYS_USERNAME }}
-          password: ${{ secrets.CLOUDWAYS_PASSWORD }}
+          server: ${{ vars.CLOUDWAYS_HOST || secrets.CLOUDWAYS_HOST }}
+          port: ${{ vars.CLOUDWAYS_PORT || secrets.CLOUDWAYS_PORT || '22' }}
+          username: ${{ vars.CLOUDWAYS_USERNAME || secrets.CLOUDWAYS_USERNAME }}
+          password: ${{ vars.CLOUDWAYS_PASSWORD || secrets.CLOUDWAYS_PASSWORD }}
           local_path: build/*
-          remote_path: ${{ secrets.CLOUDWAYS_REMOTE_PATH || 'public_html/site' }}
+          remote_path: ${{ vars.CLOUDWAYS_REMOTE_PATH || secrets.CLOUDWAYS_REMOTE_PATH || 'public_html/site' }}
           sftp_only: true
 
 
