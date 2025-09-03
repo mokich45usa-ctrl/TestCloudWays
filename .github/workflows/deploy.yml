@@ -40,8 +40,8 @@ jobs:
           PASSWORD="${{ vars.CLOUDWAYS_PASSWORD || secrets.CLOUDWAYS_PASSWORD }}"
           echo "Ensuring remote dir $REMOTE_DIR on $HOST:$PORT..."
           sshpass -p "$PASSWORD" sftp -o StrictHostKeyChecking=no -P "$PORT" "$USERNAME@$HOST" << EOF
-mkdir $REMOTE_DIR
-quit
+            mkdir $REMOTE_DIR
+            quit
 EOF
 
       - name: Deploy build to Cloudways via SFTP
