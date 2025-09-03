@@ -29,6 +29,16 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Ensure remote directory exists via SFTP
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y sshpass
+          export SSHPASS="${{ vars.CLOUDWAYS_PASSWORD || secrets.CLOUDWAYS_PASSWORD }}"
+          sftp -o StrictHostKeyChecking=no -P "${{ vars.CLOUDWAYS_PORT || secrets.CLOUDWAYS_PORT || '22' }}" "${{ vars.CLOUDWAYS_USERNAME || secrets.CLOUDWAYS_USERNAME }}@${{ vars.CLOUDWAYS_HOST || secrets.CLOUDWAYS_HOST }}" << 'EOF'
+          mkdir ${{ vars.CLOUDWAYS_REMOTE_PATH || secrets.CLOUDWAYS_REMOTE_PATH || 'public_html/site' }}
+          quit
+          EOF
+
       - name: Deploy build to Cloudways via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
