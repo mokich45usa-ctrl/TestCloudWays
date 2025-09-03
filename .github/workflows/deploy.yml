@@ -29,6 +29,18 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Debug connection (no secrets printed)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y sshpass
+          REMOTE_DIR="${{ vars.CLOUDWAYS_REMOTE_PATH || secrets.CLOUDWAYS_REMOTE_PATH || 'public_html/site' }}"
+          PORT="${{ vars.CLOUDWAYS_PORT || secrets.CLOUDWAYS_PORT || '22' }}"
+          HOST="${{ vars.CLOUDWAYS_HOST || secrets.CLOUDWAYS_HOST || 'wordpress-1516217-5827651.cloudwaysapps.com' }}"
+          USERNAME="${{ vars.CLOUDWAYS_USERNAME || secrets.CLOUDWAYS_USERNAME }}"
+          PASSWORD="${{ vars.CLOUDWAYS_PASSWORD || secrets.CLOUDWAYS_PASSWORD }}"
+          echo "Using host=$HOST port=$PORT user=$USERNAME remote=$REMOTE_DIR"
+          sshpass -p "$PASSWORD" sftp -o StrictHostKeyChecking=no -P "$PORT" "$USERNAME@$HOST" -b /dev/null || true
+
       - name: Ensure remote directory exists via SFTP
         run: |
           sudo apt-get update -y
