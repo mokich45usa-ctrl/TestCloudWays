@@ -54,7 +54,7 @@ jobs:
           sshpass -p "$PASSWORD" sftp -o StrictHostKeyChecking=no -P "$PORT" "$USERNAME@$HOST" << EOF
             mkdir $REMOTE_DIR
             quit
-EOF
+          EOF
 
       - name: Deploy build to Cloudways via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
