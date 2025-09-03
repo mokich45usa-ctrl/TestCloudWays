@@ -33,11 +33,16 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y sshpass
-          export SSHPASS="${{ vars.CLOUDWAYS_PASSWORD || secrets.CLOUDWAYS_PASSWORD }}"
-          sftp -o StrictHostKeyChecking=no -P "${{ vars.CLOUDWAYS_PORT || secrets.CLOUDWAYS_PORT || '22' }}" "${{ vars.CLOUDWAYS_USERNAME || secrets.CLOUDWAYS_USERNAME }}@${{ vars.CLOUDWAYS_HOST || secrets.CLOUDWAYS_HOST }}" << 'EOF'
-          mkdir ${{ vars.CLOUDWAYS_REMOTE_PATH || secrets.CLOUDWAYS_REMOTE_PATH || 'public_html/site' }}
-          quit
-          EOF
+          REMOTE_DIR="${{ vars.CLOUDWAYS_REMOTE_PATH || secrets.CLOUDWAYS_REMOTE_PATH || 'public_html/site' }}"
+          PORT="${{ vars.CLOUDWAYS_PORT || secrets.CLOUDWAYS_PORT || '22' }}"
+          HOST="${{ vars.CLOUDWAYS_HOST || secrets.CLOUDWAYS_HOST }}"
+          USERNAME="${{ vars.CLOUDWAYS_USERNAME || secrets.CLOUDWAYS_USERNAME }}"
+          PASSWORD="${{ vars.CLOUDWAYS_PASSWORD || secrets.CLOUDWAYS_PASSWORD }}"
+          echo "Ensuring remote dir $REMOTE_DIR on $HOST:$PORT..."
+          sshpass -p "$PASSWORD" sftp -o StrictHostKeyChecking=no -P "$PORT" "$USERNAME@$HOST" << EOF
+mkdir $REMOTE_DIR
+quit
+EOF
 
       - name: Deploy build to Cloudways via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
