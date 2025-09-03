@@ -35,7 +35,7 @@ jobs:
           sudo apt-get install -y sshpass
           REMOTE_DIR="${{ vars.CLOUDWAYS_REMOTE_PATH || secrets.CLOUDWAYS_REMOTE_PATH || 'public_html/site' }}"
           PORT="${{ vars.CLOUDWAYS_PORT || secrets.CLOUDWAYS_PORT || '22' }}"
-          HOST="${{ vars.CLOUDWAYS_HOST || secrets.CLOUDWAYS_HOST }}"
+          HOST="${{ vars.CLOUDWAYS_HOST || secrets.CLOUDWAYS_HOST || 'wordpress-1516217-5827651.cloudwaysapps.com' }}"
           USERNAME="${{ vars.CLOUDWAYS_USERNAME || secrets.CLOUDWAYS_USERNAME }}"
           PASSWORD="${{ vars.CLOUDWAYS_PASSWORD || secrets.CLOUDWAYS_PASSWORD }}"
           echo "Ensuring remote dir $REMOTE_DIR on $HOST:$PORT..."
@@ -47,7 +47,7 @@ EOF
       - name: Deploy build to Cloudways via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
-          server: ${{ vars.CLOUDWAYS_HOST || secrets.CLOUDWAYS_HOST }}
+          server: ${{ vars.CLOUDWAYS_HOST || secrets.CLOUDWAYS_HOST || 'wordpress-1516217-5827651.cloudwaysapps.com' }}
           port: ${{ vars.CLOUDWAYS_PORT || secrets.CLOUDWAYS_PORT || '22' }}
           username: ${{ vars.CLOUDWAYS_USERNAME || secrets.CLOUDWAYS_USERNAME }}
           password: ${{ vars.CLOUDWAYS_PASSWORD || secrets.CLOUDWAYS_PASSWORD }}
